@@ -1,0 +1,88 @@
+
+For Windows 10 host and CentOS linux guest
+
+# Create folder named shareddocs in G drive, 
+      -- right click the folder to go to properties
+      -- select sharing and share with everyone 
+
+# Form VirtualBox
+     -- click on Devices, then from shared folder settings add shared folder
+     -- select the folder shareddocs in G with full access
+     -- reboot the VirtualBox ([root@localhost /]#shutdown -r now)
+
+
+        # if the Devices menu does not display, check virtualbox guest addition installed or not
+        [root@localhost /]$ lsmod | grep vboxguest
+                                       # vboxguest             219348  6 vboxsf or something like that will show for being properly loaded 
+                                       # you may like to watch https://www.youtube.com/watch?v=wE_z_p9WV6M
+        [root@localhost /]$ yum install gcc
+        [root@localhost /]$ yum install kernel-devel
+                          $ yum install bzip2
+                          $ shutdown -r now
+
+[root@localhost /]# cd etc
+[root@localhost etc]# vi group
+[root@localhost etc]# exit
+             # press i for insert, add user for "vboxsf:x:493: name", esc and the :wq
+[root@localhost /]#shutdown -r now
+
+# After rebooting
+
+[nmae@localhost ~]$ su
+Password: 
+[root@localhost name]# ls
+[root@localhost name]# cd ..
+[root@localhost /]# ls
+[root@localhost /]# cd media
+[root@localhost media]# ls # this will display a directory "sf_shareddocs"
+
+# Now go to the "shareddocs" folder in G drive and create a file test1.txt, write something, save, close, exit from directory
+
+[root@localhost media]# cd sf_shareddocs
+[root@localhost sf_shareddocs]# ls
+test1.txt # this is the file created in the directory from windows host
+[root@localhost sf_shareddocs]# cat /media/sf_shareddocs/test1.txt
+It is my first shared file.[root@localhost sf_shareddocs]# content displayed
+
+# create file in linux and check in shareddocs in G drive
+
+[root@localhost sf_shareddocs]# vi test2.txt
+[root@localhost sf_shareddocs]# ls
+test1.txt  test2.txt # check that both are in G drive's folder too.
+
+# Make access easier from pwd, as it was created from the root
+
+[root@localhost /]# exit
+[name@localhost ~]$ pwd
+/home/name
+[name@localhost ~]$ cat /media/sf_shareddocs/test1.txt
+cat: /media/sf_shareddocs/test.txt: Permission denied
+[root@localhost edureka]# ls  # becasue sf_shareddocs does not show in home directory
+
+[name@localhost ~]$ su
+Password: 
+[root@localhost name]# ln -s /media/sf_shareddocs shareddocs
+[root@localhost name]# ls # now see "shareddocs" in pwd directory and easily accessible
+[root@localhost edureka]# cd shareddocs
+[root@localhost shareddocs]# ls
+test1.txt  test2.txt # two files are there
+
+[root@localhost home]# exit
+[name@localhost ~]$ ls # shows the directory
+[name@localhost ~]$ ls /home/name/shareddocs # shows two files
+
+# exit and login to root by using exit and su commands, then start working on this directory
+
+[nmae@localhost ~]$ su
+Password: 
+[root@localhost name]# cd ..
+[root@localhost name]# exit
+[name@localhost ~]$ ls /home/name/shareddocs
+test1.txt  test2.txt
+[name@localhost ~]$ vi /home/edureka/shareddocs/test3.txt
+[name@localhost ~]$ ls /home/edureka/shareddocs
+test1.txt  test2.txt  test3.txt # check that test3.txt in all three places.
+[name@localhost /]$ cat /media/sf_shareddocs/test3.txt # this prints the contents in that file.
+[name@localhost /]$ touch /media/sf_shareddocs/test4.txt # creates another file using touch command.
+
+
